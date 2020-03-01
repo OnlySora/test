@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!--注解扫描-->
+    <context:component-scan base-package="com.service"></context:component-scan>
+    
+    <!--读取配置文件的数据，链接池信息配置提供信息-->
+    <context:property-placeholder location="db.properties"/>
+
+    <!--链接池信息配置-->
+    <bean id="dataSource"
+          class="com.mchange.v2.c3p0.ComboPooledDataSource">
+          <property name="user" value="${testJDBC.user}"></property>
+          <property name="password" value="${testJDBC.password}"></property>
+          <property name="jdbcUrl" value="${testJDBC.jdbcURL}"></property>
+          <property name="driverClass" value="${testJDBC.driverClass}"></property>
+
+          <property name="initialPoolSize" value="${testJDBC.initPoolSize}"></property>
+          <property name="maxPoolSize" value="${testJDBC.maxPoolSize}"></property>
+    </bean>
+
+    <!--JdbcTemplate方法-->
+<!--    &lt;!&ndash;链接模板配置&ndash;&gt;-->
+<!--    <bean id="jdbcTemplate"-->
+<!--          class="org.springframework.jdbc.core.JdbcTemplate">-->
+<!--        <property name="dataSource" ref="dataSource"></property>-->
+<!--    </bean>-->
+
+    <!--Spring会话工厂-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="configLocation" value="mybatis-config.xml" />
+    </bean>
+
+    <!-- 自动扫描对象关系映射 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--指定会话工厂，如果当前上下文中只定义了一个则该属性可省去 -->
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+        <!-- 指定要自动扫描接口的基础包，实现接口，注册到IOC中 -->
+        <property name="basePackage" value="com.dao"></property>
+    </bean>
+
+    <!--Spring事务管理-->
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+    <!--支持注解驱动的事务管理，指定事务管理器 -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+</beans>

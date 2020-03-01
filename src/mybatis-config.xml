@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+<!--    设置每次执行sql语句都要将sql语句打印到控制台-->
+    <settings>
+        <setting name="logImpl" value="STDOUT_LOGGING" />
+    </settings>
+<!--    由于spring和mybatis整合，主配置文件的意义只是用来管理Mapper.xml文件而已 -->
+    <mappers>
+        <mapper resource="student-mapper.xml" />
+    </mappers>
+
+</configuration>

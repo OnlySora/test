@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.StudentDAO">
+
+
+
+    <select id="getBySno" resultType="com.model.Student">
+        select *
+        from student where sno = #{sno}
+    </select>
+
+    <select id="getAll" resultType="com.model.Student">
+        select * from student
+    </select>
+
+<!--    看起来像是单条插入，实际上加了foreach会自动变成批量插入-->
+    <insert id="insertList" parameterType="java.util.List">
+        INSERT student VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.name},#{item.qq},#{item.type},
+            #{item.adminTime},#{item.school},#{item.sno},#{item.dayLink},
+            #{item.willing},#{item.senior},#{item.source})
+        </foreach>
+    </insert>
+
+</mapper>
